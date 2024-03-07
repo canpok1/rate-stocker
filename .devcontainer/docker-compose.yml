@@ -1,0 +1,26 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+  db:
+    image: "mariadb:11.3"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    env_file:
+      - "db.env"
+    volumes:
+      - "db-store:/var/lib/mysql"
+    ports:
+      - "13306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      start_period: "10s"
+      interval: "10s"
+      retries: 30
+volumes:
+  db-store:
