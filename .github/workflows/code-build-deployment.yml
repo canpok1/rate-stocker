@@ -13,28 +13,21 @@ jobs:
     container:
       image: rust:latest
     steps:
-      - uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Run cargo check
         run: cargo check
-
       - name: Run cargo test
         run: cargo test
-
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
-
       - name: Run cargo clippy
         run: cargo clippy -- -D warnings
 
   db_test:
     runs-on: ubuntu-latest
     env:
-      MYSQL_DATABASE: rate-stocker
-      MYSQL_USER: service
-      MYSQL_PASSWORD: password
-      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
-      MYSQL_PORT_ON_DOCKER_NETWORK: 3306
+      DATABASE_URL: mysql://service:password@db:3306/rate-stocker
     services:
       db:
         image: mariadb:11.3
@@ -44,7 +37,7 @@ jobs:
           MYSQL_USER: service
           MYSQL_PASSWORD: password
         options: >-
-          --health-cmd "mysqladmin ping"
+          --health-cmd "healthcheck.sh --connect --innodb_initialized"
           --health-interval 10s
           --health-timeout 10s
           --health-retries 5
@@ -53,14 +46,12 @@ jobs:
     container:
       image: rust:latest
     steps:
-      - uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Run cargo install diesel_cli
         run: cargo install diesel_cli
-
       - name: Run diesel migration run
         run: diesel migration run
-
       - name: Run diesel migration revert
         run: diesel migration revert --all 
 
