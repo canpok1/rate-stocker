@@ -1,4 +1,4 @@
-FROM rust:1.76 as builder
+FROM rust:latest as builder
 WORKDIR /usr/src/myapp
 COPY . .
 RUN cargo install --path . --bin fetcher

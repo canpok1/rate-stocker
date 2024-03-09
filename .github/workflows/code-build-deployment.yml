@@ -11,7 +11,7 @@ jobs:
   code_test:
     runs-on: ubuntu-latest
     container:
-      image: rust:1.76
+      image: rust:latest
     steps:
       - uses: actions/checkout@v3
 
@@ -51,7 +51,7 @@ jobs:
         ports:
           - 3306:3306
     container:
-      image: rust:1.76
+      image: rust:latest
     steps:
       - uses: actions/checkout@v3
 

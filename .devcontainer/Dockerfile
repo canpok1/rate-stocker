@@ -1,3 +1,3 @@
-FROM rust:1.76
+FROM rust:latest
 
 RUN cargo install diesel_cli
