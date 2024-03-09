@@ -12,7 +12,7 @@
 			},
 			"extensions": [
 				"vadimcn.vscode-lldb",
-				"1yib.rust-bundle"
+				"1YiB.rust-bundle"
 			]
 		}
 	}

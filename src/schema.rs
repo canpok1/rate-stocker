@@ -2,7 +2,7 @@
 
 diesel::table! {
     daily_rates (rate_type_id, rate_date) {
-        rate_type_id -> Unsigned<Tinyint>,
+        rate_type_id -> Unsigned<Bigint>,
         rate_date -> Date,
         closing_rate -> Decimal,
         opening_rate -> Decimal,
@@ -16,7 +16,7 @@ diesel::table! {
 
 diesel::table! {
     rate_types (id) {
-        id -> Unsigned<Tinyint>,
+        id -> Unsigned<Bigint>,
         #[max_length = 255]
         type_name -> Varchar,
         created_at -> Datetime,

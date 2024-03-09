@@ -1,5 +1,5 @@
 CREATE TABLE daily_rates(
-    rate_type_id TINYINT UNSIGNED NOT NULL COMMENT 'レート種別ID',
+    rate_type_id BIGINT UNSIGNED NOT NULL COMMENT 'レート種別ID',
     rate_date DATE COMMENT 'レート日付',
     closing_rate DECIMAL(15,4) NOT NULL COMMENT '終値',
     opening_rate DECIMAL(15,4) NOT NULL COMMENT '始値',
