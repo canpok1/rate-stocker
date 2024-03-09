@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrator
+  namespace: rate-stocker
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrator
+          image: ghcr.io/canpok1/rate-stocker/migrator:latest
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb
+                  key: database-url
+      restartPolicy: Never
+  backoffLimit: 4
+
