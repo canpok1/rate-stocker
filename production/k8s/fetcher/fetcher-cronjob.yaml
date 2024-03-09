@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fetcher
+  namespace: rate-stocker
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: fetcher
+              image: ghcr.io/canpok1/rate-stocker/fetcher:latest
+              args: ["btc_jpy"]
+              env:
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: mariadb
+                      key: database-url
+          restartPolicy: OnFailure
