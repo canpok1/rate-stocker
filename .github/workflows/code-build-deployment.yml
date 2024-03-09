@@ -63,7 +63,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        app: [fetcher]
+        app: [fetcher, migrator]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
