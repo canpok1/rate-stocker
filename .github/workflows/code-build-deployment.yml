@@ -14,7 +14,7 @@ jobs:
       image: rust:latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run cargo check
         run: cargo check
       - name: Run cargo test
@@ -47,7 +47,7 @@ jobs:
       image: rust:latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run cargo install diesel_cli
         run: cargo install diesel_cli
       - name: Run diesel migration run
@@ -65,7 +65,8 @@ jobs:
       matrix:
         app: [fetcher]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
