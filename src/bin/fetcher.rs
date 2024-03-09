@@ -1,15 +1,12 @@
-use bigdecimal::BigDecimal;
-use bigdecimal::FromPrimitive;
-use chrono::FixedOffset;
-use chrono::Utc;
+use bigdecimal::{BigDecimal, FromPrimitive};
+use chrono::{FixedOffset, Utc};
 use clap::Parser;
 use coincheck_rust::client::Client;
 
-use rate_stocker::create_rate_type;
-use rate_stocker::establish_connection;
-use rate_stocker::models::NewDailyRate;
-use rate_stocker::select_rate_type;
-use rate_stocker::upsert_daily_rate;
+use rate_stocker::{
+    create_rate_type, establish_connection, models::NewDailyRate, select_rate_type,
+    upsert_daily_rate,
+};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]

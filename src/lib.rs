@@ -1,17 +1,12 @@
 pub mod models;
 pub mod schema;
 
-use diesel::mysql::MysqlConnection;
-use diesel::prelude::*;
+use diesel::{mysql::MysqlConnection, prelude::*};
 use dotenvy::dotenv;
 use models::NewDailyRate;
-use schema::daily_rates::volume;
 use std::env;
 
-use crate::{
-    models::{DailyRate, NewRateType, RateType},
-    schema::daily_rates::{closing_rate, high_rate, low_rate},
-};
+use crate::models::{DailyRate, NewRateType, RateType};
 
 pub fn establish_connection() -> MysqlConnection {
     dotenv().ok();
@@ -77,6 +72,8 @@ pub fn create_daily_rate(conn: &mut MysqlConnection, new_daily_rate: &NewDailyRa
 }
 
 pub fn upsert_daily_rate(conn: &mut MysqlConnection, new_daily_rate: &NewDailyRate) -> () {
+    use crate::schema::daily_rates::dsl::*;
+
     let old = select_daily_rate(
         conn,
         &new_daily_rate.rate_type_id,
