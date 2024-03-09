@@ -16,4 +16,4 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /usr/local/cargo/bin/fetcher /usr/local/bin/fetcher
 
-CMD ["fetcher"]
+ENTRYPOINT ["fetcher"]
