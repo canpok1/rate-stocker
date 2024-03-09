@@ -1,0 +1,91 @@
+name: code-build-deployment
+
+on:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code_test:
+    runs-on: ubuntu-latest
+    container:
+      image: rust:1.76
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run cargo check
+        run: cargo check
+
+      - name: Run cargo test
+        run: cargo test
+
+      - name: Run cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: Run cargo clippy
+        run: cargo clippy -- -D warnings
+
+  db_test:
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_DATABASE: rate-stocker
+      MYSQL_USER: service
+      MYSQL_PASSWORD: password
+      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
+      MYSQL_PORT_ON_DOCKER_NETWORK: 3306
+    services:
+      db:
+        image: mariadb:11.3
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+          MYSQL_DATABASE: rate-stocker
+          MYSQL_USER: service
+          MYSQL_PASSWORD: password
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 5
+        ports:
+          - 3306:3306
+    container:
+      image: rust:1.76
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run cargo install diesel_cli
+        run: cargo install diesel_cli
+
+      - name: Run diesel migration run
+        run: diesel migration run
+
+      - name: Run diesel migration revert
+        run: diesel migration revert --all 
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [code_test, db_test]
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        app: [fetcher]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: production/docker/${{ matrix.app }}/Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
