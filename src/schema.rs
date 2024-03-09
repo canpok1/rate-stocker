@@ -26,7 +26,4 @@ diesel::table! {
 
 diesel::joinable!(daily_rates -> rate_types (rate_type_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    daily_rates,
-    rate_types,
-);
+diesel::allow_tables_to_appear_in_same_query!(daily_rates, rate_types,);

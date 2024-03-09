@@ -24,16 +24,13 @@ async fn main() {
     let access_key = "";
     let secret_key = "";
 
-    let coincheck: coincheck_rust::client::DefaultClient;
-    match coincheck_rust::client::DefaultClient::new(&access_key, &secret_key) {
-        Ok(cli) => {
-            coincheck = cli;
-        }
+    let coincheck = match coincheck_rust::client::DefaultClient::new(access_key, secret_key) {
+        Ok(cli) => cli,
         Err(err) => {
             println!("{}", err);
             return;
         }
-    }
+    };
 
     let conn = &mut establish_connection();
 
@@ -43,7 +40,7 @@ async fn main() {
             None => create_rate_type(conn, pair),
         };
 
-        match coincheck.get_ticker(&pair).await {
+        match coincheck.get_ticker(pair).await {
             Ok(ticker) => {
                 let utc_now_datetime = Utc::now();
                 let jst_now_datetime =

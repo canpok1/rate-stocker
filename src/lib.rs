@@ -63,22 +63,13 @@ pub fn create_daily_rate(conn: &mut MysqlConnection, new_daily_rate: &NewDailyRa
         .execute(conn)
         .expect("Error saving new daily_rate");
 
-    select_daily_rate(
-        conn,
-        &new_daily_rate.rate_type_id,
-        &new_daily_rate.rate_date,
-    )
-    .unwrap()
+    select_daily_rate(conn, new_daily_rate.rate_type_id, new_daily_rate.rate_date).unwrap()
 }
 
-pub fn upsert_daily_rate(conn: &mut MysqlConnection, new_daily_rate: &NewDailyRate) -> () {
+pub fn upsert_daily_rate(conn: &mut MysqlConnection, new_daily_rate: &NewDailyRate) {
     use crate::schema::daily_rates::dsl::*;
 
-    let old = select_daily_rate(
-        conn,
-        &new_daily_rate.rate_type_id,
-        &new_daily_rate.rate_date,
-    );
+    let old = select_daily_rate(conn, new_daily_rate.rate_type_id, new_daily_rate.rate_date);
     match old {
         Some(_old) => {
             diesel::update(new_daily_rate)
