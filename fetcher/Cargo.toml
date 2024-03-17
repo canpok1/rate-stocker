@@ -1,0 +1,16 @@
+[package]
+name = "fetcher"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bigdecimal = { workspace = true }
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
+clap = { workspace = true }
+coincheck_rust = { workspace = true }
+dotenvy = { workspace = true }
+tokio = { workspace = true }
+lib = { path = "../lib" }

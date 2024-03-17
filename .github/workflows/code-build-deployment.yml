@@ -16,13 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run cargo check
-        run: cargo check
+        run: cargo check --workspace
       - name: Run cargo test
-        run: cargo test
+        run: cargo test --workspace
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
       - name: Run cargo clippy
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --workspace -- -D warnings
 
   db_test:
     runs-on: ubuntu-latest
@@ -51,9 +51,11 @@ jobs:
       - name: Run cargo install diesel_cli
         run: cargo install diesel_cli
       - name: Run diesel migration run
+        working-directory: migrator
         run: diesel migration run
       - name: Run diesel migration revert
-        run: diesel migration revert --all 
+        working-directory: migrator
+        run: diesel migration revert --all
 
   build:
     runs-on: ubuntu-latest
@@ -77,7 +79,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: production/docker/${{ matrix.app }}/Dockerfile
+          file: ${{ matrix.app }}/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
