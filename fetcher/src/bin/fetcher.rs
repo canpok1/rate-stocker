@@ -3,7 +3,7 @@ use chrono::{FixedOffset, Utc};
 use clap::Parser;
 use coincheck_rust::client::Client;
 
-use fetcher::{
+use lib::{
     create_rate_type, establish_connection, models::NewDailyRate, select_rate_type,
     upsert_daily_rate,
 };
