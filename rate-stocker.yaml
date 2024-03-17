@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: Rate-Stocker
+  version: 1.0.0
+servers:
+  - url: https://localhost/api/v1
+tags:
+  - name: rate
+paths:
+  /rates/{pair}:
+    get:
+      tags:
+        - rate
+      summary: 通貨ペアのレートを取得
+      description: 基準日時における最新のレート情報を取得します。
+      operationId: getRates
+      parameters:
+        - name: pair
+          in: path
+          description: 通貨ペア
+          required: true
+          schema:
+            $ref: "#/components/schemas/Pair"
+        - name: period
+          in: query
+          description: 期間
+          required: false
+          schema:
+            $ref: "#/components/schemas/Period"
+            default: daily
+        - name: count
+          in: query
+          description: 取得件数
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 100
+        - name: base_datetime
+          in: query
+          description: 基準日時。省略時は現在日時となる。
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: 通貨ペアのレート
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetRatesResponse"
+        "404":
+          description: レート情報なし
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: エラーメッセージ
+    GetRatesResponse:
+      type: object
+      properties:
+        period:
+          $ref: "#/components/schemas/Period"
+        rates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Rate"
+    Pair:
+      description: 通貨ペア
+      type: string
+      enum:
+        - btc_jpy
+        - etc_jpy
+        - lsk_jpy
+        - mona_jpy
+        - plt_jpy
+        - fnct_jpy
+        - dai_jpy
+        - wbtc_jpy
+    Period:
+      description: 期間
+      type: string
+      enum:
+        - daily
+    Rate:
+      description: レート
+      type: object
+      properties:
+        closing:
+          type: number
+          format: double
+          description: 終値
+        opening:
+          type: number
+          format: double
+          description: 始値
+        high:
+          type: number
+          format: double
+          description: 高値
+        low:
+          type: number
+          format: double
+          description: 安値
+        volume:
+          type: number
+          format: double
+          description: 出来高
+        begin_date:
+          type: string
+          format: date-time
+          description: 期間の開始日時
+        end_date:
+          type: string
+          format: date-time
+          description: 期間の終了日時

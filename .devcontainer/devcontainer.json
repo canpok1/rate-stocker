@@ -12,7 +12,8 @@
 			},
 			"extensions": [
 				"vadimcn.vscode-lldb",
-				"1YiB.rust-bundle"
+				"1YiB.rust-bundle",
+				"Arjun.swagger-viewer"
 			]
 		}
 	}
