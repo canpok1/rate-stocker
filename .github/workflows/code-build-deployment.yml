@@ -51,10 +51,10 @@ jobs:
       - name: Run cargo install diesel_cli
         run: cargo install diesel_cli
       - name: Run diesel migration run
-        working-directory: fetcher
+        working-directory: migrator
         run: diesel migration run
       - name: Run diesel migration revert
-        working-directory: fetcher
+        working-directory: migrator
         run: diesel migration revert --all
 
   build:
