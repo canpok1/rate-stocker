@@ -1,0 +1,13 @@
+[tasks.run-fetcher]
+description = "Run fetcher"
+workspace = false
+script = "cargo run -p fetcher -- ${@}"
+
+[tasks.api-lib]
+workspace = false
+script = '''
+openapi-generator-cli generate \
+-i rate-stocker.yaml \
+-g rust-server \
+-o ./api-lib
+'''
