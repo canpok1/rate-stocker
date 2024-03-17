@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
   title: Rate-Stocker
   version: 1.0.0
 servers:
-  - url: https://mini-pc/rate-stocker/api/v1
+  - url: https://localhost/api/v1
 tags:
   - name: rate
 paths:
@@ -20,13 +20,13 @@ paths:
           description: 通貨ペア
           required: true
           schema:
-            $ref: '#/components/schemas/Pair'
+            $ref: "#/components/schemas/Pair"
         - name: period
           in: query
           description: 期間
           required: false
           schema:
-            $ref: '#/components/schemas/Period'
+            $ref: "#/components/schemas/Period"
             default: daily
         - name: count
           in: query
@@ -45,31 +45,35 @@ paths:
             type: string
             format: date-time
       responses:
-        '200':
+        "200":
           description: 通貨ペアのレート
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  period:
-                    $ref: '#/components/schemas/Period'
-                  rates:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Rate'
-        '404':
+                $ref: "#/components/schemas/GetRatesResponse"
+        "404":
           description: レート情報なし
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: エラーメッセージ
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: エラーメッセージ
+    GetRatesResponse:
+      type: object
+      properties:
+        period:
+          $ref: "#/components/schemas/Period"
+        rates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Rate"
     Pair:
       description: 通貨ペア
       type: string
@@ -94,35 +98,28 @@ components:
         closing:
           type: number
           format: double
-          examples: [1000.00]
           description: 終値
         opening:
           type: number
           format: double
-          examples: [1000.00]
           description: 始値
         high:
           type: number
           format: double
-          examples: [1000.00]
           description: 高値
         low:
           type: number
           format: double
-          examples: [1000.00]
           description: 安値
         volume:
           type: number
           format: double
-          examples: [1000.00]
           description: 出来高
         begin_date:
           type: string
           format: date-time
-          examples: [2024-01-01T01:00:00+09:00]
           description: 期間の開始日時
         end_date:
           type: string
           format: date-time
-          examples: [2024-01-01T23:59:59+09:00]
           description: 期間の終了日時
