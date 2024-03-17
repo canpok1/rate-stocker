@@ -2,3 +2,13 @@
 members = [
   "fetcher", "lib",
 ]
+
+[workspace.dependencies]
+bigdecimal = "0.4"
+chrono = "0.4"
+chrono-tz = "0.8"
+clap = { version = "4.5.2", features = ["derive"] }
+coincheck_rust = {git = "https://github.com/canpok1/coincheck-rust.git"}
+diesel = { version = "2.1.0", features = ["mysql", "chrono", "numeric"] }
+dotenvy = "0.15"
+tokio = { version = "1", features = ["full"] }

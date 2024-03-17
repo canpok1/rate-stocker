@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bigdecimal = "0.4"
-chrono = "0.4"
-chrono-tz = "0.8"
-diesel = { version = "2.1.0", features = ["mysql", "chrono", "numeric"] }
-dotenvy = "0.15"
+bigdecimal = { workspace = true }
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
+diesel = { workspace = true }
+dotenvy = { workspace = true }
