@@ -114,19 +114,12 @@ dependencies = [
  "async-trait",
  "chrono",
  "env_logger 0.11.3",
- "futures",
  "hyper",
  "log",
- "mime",
- "native-tls",
  "openapi_client",
- "serde",
  "serde_ignored",
- "serde_json",
  "swagger",
  "tokio",
- "url",
- "validator 0.17.0",
 ]
 
 [[package]]
@@ -400,41 +393,6 @@ name = "core-foundation-sys"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06ea2b9bc92be3c2baa9334a323ebca2d6f074ff852cd1d7b11064035cd3868f"
-
-[[package]]
-name = "darling"
-version = "0.20.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54e36fcd13ed84ffdfda6f5be89b31287cbb80c439841fe69e04841435464391"
-dependencies = [
- "darling_core",
- "darling_macro",
-]
-
-[[package]]
-name = "darling_core"
-version = "0.20.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c2cf1c23a687a1feeb728783b993c4e1ad83d99f351801977dd809b48d0a70f"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2 1.0.78",
- "quote 1.0.35",
- "strsim 0.10.0",
- "syn 2.0.52",
-]
-
-[[package]]
-name = "darling_macro"
-version = "0.20.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a668eda54683121533a393014d8692171709ff57a7d61f187b6e782719f8933f"
-dependencies = [
- "darling_core",
- "quote 1.0.35",
- "syn 2.0.52",
-]
 
 [[package]]
 name = "diesel"
@@ -1030,12 +988,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ident_case"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
-
-[[package]]
 name = "idna"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1360,7 +1312,7 @@ dependencies = [
  "tokio",
  "tokio-openssl",
  "url",
- "validator 0.16.1",
+ "validator",
 ]
 
 [[package]]
@@ -1926,12 +1878,6 @@ checksum = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
 
 [[package]]
 name = "strsim"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
-
-[[package]]
-name = "strsim"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ee073c9e4cd00e28217186dbe12796d692868f432bf2e97ee73bed0c56dfa01"
@@ -2304,23 +2250,7 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
- "validator_derive 0.16.0",
-]
-
-[[package]]
-name = "validator"
-version = "0.17.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da339118f018cc70ebf01fafc103360528aad53717e4bf311db929cb01cb9345"
-dependencies = [
- "idna 0.5.0",
- "once_cell",
- "regex 1.10.3",
- "serde",
- "serde_derive",
- "serde_json",
- "url",
- "validator_derive 0.17.0",
+ "validator_derive",
 ]
 
 [[package]]
@@ -2337,20 +2267,6 @@ dependencies = [
  "regex 1.10.3",
  "syn 1.0.109",
  "validator_types",
-]
-
-[[package]]
-name = "validator_derive"
-version = "0.17.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76e88ea23b8f5e59230bff8a2f03c0ee0054a61d5b8343a38946bcd406fe624c"
-dependencies = [
- "darling",
- "proc-macro-error",
- "proc-macro2 1.0.78",
- "quote 1.0.35",
- "regex 1.10.3",
- "syn 2.0.52",
 ]
 
 [[package]]

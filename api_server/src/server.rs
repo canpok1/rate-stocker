@@ -1,27 +1,13 @@
-//! Main library entry point for openapi_client implementation.
-
-#![allow(unused_imports)]
-
 use async_trait::async_trait;
-use futures::{future, Stream, StreamExt, TryFutureExt, TryStreamExt};
 use log::info;
-use std::error::Error;
-use std::future::Future;
 use std::marker::PhantomData;
-use std::net::SocketAddr;
-use std::sync::{Arc, Mutex};
-use std::task::{Context, Poll};
 use swagger::auth::MakeAllowAllAuthenticator;
-use swagger::ApiError;
-use swagger::EmptyContext;
-use swagger::{Has, XSpanIdString};
-use tokio::net::TcpListener;
+use swagger::{ApiError, EmptyContext, Has, XSpanIdString};
 
 use openapi_client::models::{self};
 use openapi_client::server::MakeService;
 use openapi_client::{Api, GetRatesResponse};
 
-/// Builds an SSL implementation for Simple HTTPS from some hard-coded file names
 pub async fn create(addr: &str) {
     let addr = addr.parse().expect("Failed to parse bind address");
 
@@ -31,9 +17,7 @@ pub async fn create(addr: &str) {
 
     let service = MakeAllowAllAuthenticator::new(service, "cosmo");
 
-    #[allow(unused_mut)]
-    let mut service =
-        openapi_client::server::context::MakeAddContext::<_, EmptyContext>::new(service);
+    let service = openapi_client::server::context::MakeAddContext::<_, EmptyContext>::new(service);
 
     hyper::server::Server::bind(&addr)
         .serve(service)
