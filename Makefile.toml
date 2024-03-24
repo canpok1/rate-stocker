@@ -1,3 +1,7 @@
+[env]
+RUST_LOG = "debug"
+PORT = 8080
+
 [tasks.run-fetcher]
 description = "Run fetcher"
 workspace = false
@@ -6,7 +10,7 @@ script = "cargo run -p fetcher -- ${@}"
 [tasks.run-api-server]
 description = "Run api server"
 workspace = false
-script = "RUST_LOG=debug cargo run -p api_server"
+script = "cargo run -p api_server"
 
 [tasks.openapi_client]
 description = "Generate openapi_client from rate-stocker.yaml"
