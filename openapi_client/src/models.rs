@@ -11,17 +11,16 @@ use crate::header;
 pub struct ErrorResponse {
     /// エラーメッセージ
     #[serde(rename = "error")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub error: Option<String>,
+    pub error: String,
 
 }
 
 
 impl ErrorResponse {
     #[allow(clippy::new_without_default)]
-    pub fn new() -> ErrorResponse {
+    pub fn new(error: String, ) -> ErrorResponse {
         ErrorResponse {
-            error: None,
+            error,
         }
     }
 }
@@ -33,12 +32,8 @@ impl std::string::ToString for ErrorResponse {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
 
-            self.error.as_ref().map(|error| {
-                [
-                    "error".to_string(),
-                    error.to_string(),
-                ].join(",")
-            }),
+            Some("error".to_string()),
+            Some(self.error.to_string()),
 
         ];
 
@@ -87,7 +82,7 @@ impl std::str::FromStr for ErrorResponse {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(ErrorResponse {
-            error: intermediate_rep.error.into_iter().next(),
+            error: intermediate_rep.error.into_iter().next().ok_or_else(|| "error missing in ErrorResponse".to_string())?,
         })
     }
 }
@@ -135,22 +130,20 @@ impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderVal
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct GetRatesResponse {
     #[serde(rename = "period")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub period: Option<models::Period>,
+    pub period: models::Period,
 
     #[serde(rename = "rates")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub rates: Option<Vec<models::Rate>>,
+    pub rates: Vec<models::Rate>,
 
 }
 
 
 impl GetRatesResponse {
     #[allow(clippy::new_without_default)]
-    pub fn new() -> GetRatesResponse {
+    pub fn new(period: models::Period, rates: Vec<models::Rate>, ) -> GetRatesResponse {
         GetRatesResponse {
-            period: None,
-            rates: None,
+            period,
+            rates,
         }
     }
 }
@@ -214,8 +207,8 @@ impl std::str::FromStr for GetRatesResponse {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(GetRatesResponse {
-            period: intermediate_rep.period.into_iter().next(),
-            rates: intermediate_rep.rates.into_iter().next(),
+            period: intermediate_rep.period.into_iter().next().ok_or_else(|| "period missing in GetRatesResponse".to_string())?,
+            rates: intermediate_rep.rates.into_iter().next().ok_or_else(|| "rates missing in GetRatesResponse".to_string())?,
         })
     }
 }
@@ -357,53 +350,46 @@ impl std::str::FromStr for Period {
 pub struct Rate {
     /// 終値
     #[serde(rename = "closing")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub closing: Option<f64>,
+    pub closing: f64,
 
     /// 始値
     #[serde(rename = "opening")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub opening: Option<f64>,
+    pub opening: f64,
 
     /// 高値
     #[serde(rename = "high")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub high: Option<f64>,
+    pub high: f64,
 
     /// 安値
     #[serde(rename = "low")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub low: Option<f64>,
+    pub low: f64,
 
     /// 出来高
     #[serde(rename = "volume")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub volume: Option<f64>,
+    pub volume: f64,
 
     /// 期間の開始日時
     #[serde(rename = "begin_date")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub begin_date: Option<chrono::DateTime::<chrono::Utc>>,
+    pub begin_date: chrono::DateTime::<chrono::Utc>,
 
     /// 期間の終了日時
     #[serde(rename = "end_date")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub end_date: Option<chrono::DateTime::<chrono::Utc>>,
+    pub end_date: chrono::DateTime::<chrono::Utc>,
 
 }
 
 
 impl Rate {
     #[allow(clippy::new_without_default)]
-    pub fn new() -> Rate {
+    pub fn new(closing: f64, opening: f64, high: f64, low: f64, volume: f64, begin_date: chrono::DateTime::<chrono::Utc>, end_date: chrono::DateTime::<chrono::Utc>, ) -> Rate {
         Rate {
-            closing: None,
-            opening: None,
-            high: None,
-            low: None,
-            volume: None,
-            begin_date: None,
-            end_date: None,
+            closing,
+            opening,
+            high,
+            low,
+            volume,
+            begin_date,
+            end_date,
         }
     }
 }
@@ -415,44 +401,24 @@ impl std::string::ToString for Rate {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
 
-            self.closing.as_ref().map(|closing| {
-                [
-                    "closing".to_string(),
-                    closing.to_string(),
-                ].join(",")
-            }),
+            Some("closing".to_string()),
+            Some(self.closing.to_string()),
 
 
-            self.opening.as_ref().map(|opening| {
-                [
-                    "opening".to_string(),
-                    opening.to_string(),
-                ].join(",")
-            }),
+            Some("opening".to_string()),
+            Some(self.opening.to_string()),
 
 
-            self.high.as_ref().map(|high| {
-                [
-                    "high".to_string(),
-                    high.to_string(),
-                ].join(",")
-            }),
+            Some("high".to_string()),
+            Some(self.high.to_string()),
 
 
-            self.low.as_ref().map(|low| {
-                [
-                    "low".to_string(),
-                    low.to_string(),
-                ].join(",")
-            }),
+            Some("low".to_string()),
+            Some(self.low.to_string()),
 
 
-            self.volume.as_ref().map(|volume| {
-                [
-                    "volume".to_string(),
-                    volume.to_string(),
-                ].join(",")
-            }),
+            Some("volume".to_string()),
+            Some(self.volume.to_string()),
 
             // Skipping begin_date in query parameter serialization
 
@@ -523,13 +489,13 @@ impl std::str::FromStr for Rate {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(Rate {
-            closing: intermediate_rep.closing.into_iter().next(),
-            opening: intermediate_rep.opening.into_iter().next(),
-            high: intermediate_rep.high.into_iter().next(),
-            low: intermediate_rep.low.into_iter().next(),
-            volume: intermediate_rep.volume.into_iter().next(),
-            begin_date: intermediate_rep.begin_date.into_iter().next(),
-            end_date: intermediate_rep.end_date.into_iter().next(),
+            closing: intermediate_rep.closing.into_iter().next().ok_or_else(|| "closing missing in Rate".to_string())?,
+            opening: intermediate_rep.opening.into_iter().next().ok_or_else(|| "opening missing in Rate".to_string())?,
+            high: intermediate_rep.high.into_iter().next().ok_or_else(|| "high missing in Rate".to_string())?,
+            low: intermediate_rep.low.into_iter().next().ok_or_else(|| "low missing in Rate".to_string())?,
+            volume: intermediate_rep.volume.into_iter().next().ok_or_else(|| "volume missing in Rate".to_string())?,
+            begin_date: intermediate_rep.begin_date.into_iter().next().ok_or_else(|| "begin_date missing in Rate".to_string())?,
+            end_date: intermediate_rep.end_date.into_iter().next().ok_or_else(|| "end_date missing in Rate".to_string())?,
         })
     }
 }

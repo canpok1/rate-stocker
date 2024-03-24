@@ -1,10 +1,15 @@
 use async_trait::async_trait;
+use bigdecimal::ToPrimitive;
+use chrono::NaiveDate;
+use lib::datetime::{to_datetime_jst, today_jst};
+use lib::{establish_connection, select_daily_rates, select_rate_type};
 use log::info;
 use std::marker::PhantomData;
+use std::time::Duration;
 use swagger::auth::MakeAllowAllAuthenticator;
 use swagger::{ApiError, EmptyContext, Has, XSpanIdString};
 
-use openapi_client::models::{self};
+use openapi_client::models::{self, ErrorResponse};
 use openapi_client::server::MakeService;
 use openapi_client::{Api, GetRatesResponse};
 
@@ -60,21 +65,60 @@ where
             base_datetime,
             context.get().0.clone()
         );
-        let response = models::GetRatesResponse {
-            period,
-            rates: Some(vec![{
-                models::Rate {
-                    closing: Some(1.0),
-                    opening: Some(1.0),
-                    high: Some(1.0),
-                    low: Some(1.0),
-                    volume: Some(1.0),
-                    begin_date: Some(chrono::Utc::now()),
-                    end_date: Some(chrono::Utc::now()),
-                }
-            }]),
+        let pair = pair.to_string();
+        let period = if let Some(p) = period {
+            p
+        } else {
+            models::Period::Daily
         };
+        let base_date: NaiveDate = if let Some(d) = base_datetime {
+            d.date_naive()
+        } else {
+            today_jst()
+        };
+
+        let conn = &mut establish_connection();
+
+        let rate_type = select_rate_type(conn, &pair);
+        if rate_type.is_none() {
+            let response = ErrorResponse {
+                error: format!("pair is unsupported, pair:[{}]", pair).to_owned(),
+            };
+            return Ok(GetRatesResponse::Status404(response));
+        }
+
+        let rate_type_id = rate_type.unwrap().id;
+        let limit: i64 = if let Some(limit) = count {
+            limit as i64
+        } else {
+            100
+        };
+        let rates = select_daily_rates(conn, &rate_type_id, &base_date, limit);
+        if rates.is_empty() {
+            let response = ErrorResponse {
+                error: format!("rate is empty, pair:[{}]", pair).to_owned(),
+            };
+            return Ok(GetRatesResponse::Status404(response));
+        }
+
+        let rates = rates
+            .iter()
+            .map(|v| {
+                let begin_date_jst = to_datetime_jst(v.rate_date, 0);
+                let end_date_jst = begin_date_jst + Duration::from_millis(24 * 60 * 60 * 1000 - 1);
+                models::Rate {
+                    closing: v.closing_rate.to_f64().unwrap(),
+                    opening: v.opening_rate.to_f64().unwrap(),
+                    high: v.high_rate.to_f64().unwrap(),
+                    low: v.low_rate.to_f64().unwrap(),
+                    volume: v.volume.to_f64().unwrap(),
+                    begin_date: begin_date_jst.to_utc(),
+                    end_date: end_date_jst.to_utc(),
+                }
+            })
+            .collect();
+
+        let response = models::GetRatesResponse { period, rates };
         Ok(GetRatesResponse::Status200(response))
-        //Err(ApiError("Generic failure".into()))
     }
 }

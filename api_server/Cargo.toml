@@ -13,3 +13,5 @@ hyper = {version = "0.14", features = ["full"]}
 serde_ignored = {version = "0.1.1"}
 env_logger = "0.11"
 tokio = { workspace = true }
+lib = { path = "../lib" }
+bigdecimal = { workspace = true }
