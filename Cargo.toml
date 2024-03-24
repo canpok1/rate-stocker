@@ -1,6 +1,9 @@
 [workspace]
 members = [
-  "fetcher", "lib",
+  "api_server",
+  "fetcher",
+  "lib",
+  "openapi_client",
 ]
 
 [workspace.dependencies]

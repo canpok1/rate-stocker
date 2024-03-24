@@ -1,3 +1,4 @@
+pub mod datetime;
 pub mod models;
 pub mod schema;
 
@@ -52,6 +53,22 @@ pub fn select_daily_rate(
         .select(DailyRate::as_select())
         .first(conn)
         .optional()
+        .expect("Error loading daily_rates")
+}
+
+pub fn select_daily_rates(
+    conn: &mut MysqlConnection,
+    type_id: &u64,
+    base_date: &chrono::NaiveDate,
+    limit: i64,
+) -> Vec<DailyRate> {
+    use crate::schema::daily_rates::dsl::*;
+    daily_rates
+        .filter(rate_type_id.eq(type_id).and(rate_date.le(base_date)))
+        .select(DailyRate::as_select())
+        .order(rate_date.desc())
+        .limit(limit)
+        .load(conn)
         .expect("Error loading daily_rates")
 }
 

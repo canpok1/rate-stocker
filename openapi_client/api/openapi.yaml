@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: Rate-Stocker
+  version: 1.0.0
+servers:
+- url: http://127.0.0.1:8080/api/v1
+tags:
+- name: rate
+paths:
+  /rates/{pair}:
+    get:
+      description: 基準日時における最新のレート情報を取得します。
+      operationId: getRates
+      parameters:
+      - description: 通貨ペア
+        explode: false
+        in: path
+        name: pair
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pair'
+        style: simple
+      - description: 期間
+        explode: true
+        in: query
+        name: period
+        required: false
+        schema:
+          $ref: '#/components/schemas/Period'
+        style: form
+      - description: 取得件数
+        explode: true
+        in: query
+        name: count
+        required: false
+        schema:
+          default: 100
+          format: int32
+          minimum: 1
+          type: integer
+        style: form
+      - description: 基準日時。省略時は現在日時となる。
+        explode: true
+        in: query
+        name: base_datetime
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRatesResponse'
+          description: 通貨ペアのレート
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: レート情報なし
+      summary: 通貨ペアのレートを取得
+      tags:
+      - rate
+components:
+  schemas:
+    ErrorResponse:
+      example:
+        error: error
+      properties:
+        error:
+          description: エラーメッセージ
+          type: string
+      required:
+      - error
+      type: object
+    GetRatesResponse:
+      example:
+        period: null
+        rates:
+        - volume: 5.637376656633329
+          end_date: 2000-01-23T04:56:07.000+00:00
+          high: 1.4658129805029452
+          closing: 0.8008281904610115
+          low: 5.962133916683182
+          begin_date: 2000-01-23T04:56:07.000+00:00
+          opening: 6.027456183070403
+        - volume: 5.637376656633329
+          end_date: 2000-01-23T04:56:07.000+00:00
+          high: 1.4658129805029452
+          closing: 0.8008281904610115
+          low: 5.962133916683182
+          begin_date: 2000-01-23T04:56:07.000+00:00
+          opening: 6.027456183070403
+      properties:
+        period:
+          $ref: '#/components/schemas/Period'
+        rates:
+          items:
+            $ref: '#/components/schemas/Rate'
+          type: array
+      required:
+      - period
+      - rates
+      type: object
+    Pair:
+      description: 通貨ペア
+      enum:
+      - btc_jpy
+      - etc_jpy
+      - lsk_jpy
+      - mona_jpy
+      - plt_jpy
+      - fnct_jpy
+      - dai_jpy
+      - wbtc_jpy
+      type: string
+    Period:
+      description: 期間
+      enum:
+      - daily
+      type: string
+    Rate:
+      description: レート
+      example:
+        volume: 5.637376656633329
+        end_date: 2000-01-23T04:56:07.000+00:00
+        high: 1.4658129805029452
+        closing: 0.8008281904610115
+        low: 5.962133916683182
+        begin_date: 2000-01-23T04:56:07.000+00:00
+        opening: 6.027456183070403
+      properties:
+        closing:
+          description: 終値
+          format: double
+          type: number
+        opening:
+          description: 始値
+          format: double
+          type: number
+        high:
+          description: 高値
+          format: double
+          type: number
+        low:
+          description: 安値
+          format: double
+          type: number
+        volume:
+          description: 出来高
+          format: double
+          type: number
+        begin_date:
+          description: 期間の開始日時
+          format: date-time
+          type: string
+        end_date:
+          description: 期間の終了日時
+          format: date-time
+          type: string
+      required:
+      - begin_date
+      - closing
+      - end_date
+      - high
+      - low
+      - opening
+      - volume
+      type: object
+

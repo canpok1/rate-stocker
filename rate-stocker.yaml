@@ -3,7 +3,7 @@ info:
   title: Rate-Stocker
   version: 1.0.0
 servers:
-  - url: https://localhost/api/v1
+  - url: http://127.0.0.1:8080/api/v1
 tags:
   - name: rate
 paths:
@@ -65,6 +65,8 @@ components:
         error:
           type: string
           description: エラーメッセージ
+      required:
+        - "error"
     GetRatesResponse:
       type: object
       properties:
@@ -74,6 +76,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Rate"
+      required:
+        - "period"
+        - "rates"
     Pair:
       description: 通貨ペア
       type: string
@@ -123,3 +128,11 @@ components:
           type: string
           format: date-time
           description: 期間の終了日時
+      required:
+        - "closing"
+        - "opening"
+        - "high"
+        - "low"
+        - "volume"
+        - "begin_date"
+        - "end_date"
