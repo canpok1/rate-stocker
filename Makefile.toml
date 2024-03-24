@@ -3,11 +3,17 @@ description = "Run fetcher"
 workspace = false
 script = "cargo run -p fetcher -- ${@}"
 
-[tasks.api-lib]
+[tasks.run-api-server]
+description = "Run api server"
+workspace = false
+script = "RUST_LOG=debug cargo run -p api_server"
+
+[tasks.openapi_client]
+description = "Generate openapi_client from rate-stocker.yaml"
 workspace = false
 script = '''
 openapi-generator-cli generate \
 -i rate-stocker.yaml \
 -g rust-server \
--o ./api-lib
+-o ./openapi_client
 '''
