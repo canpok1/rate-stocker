@@ -20,4 +20,5 @@ openapi-generator-cli generate \
 -i rate-stocker.yaml \
 -g rust-server \
 -o ./openapi_client
+cargo fmt -p openapi_client
 '''

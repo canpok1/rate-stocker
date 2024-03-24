@@ -12,9 +12,9 @@ use std::marker::PhantomData;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
-use swagger::{Has, XSpanIdString};
 use swagger::auth::MakeAllowAllAuthenticator;
 use swagger::EmptyContext;
+use swagger::{Has, XSpanIdString};
 use tokio::net::TcpListener;
 
 #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "ios")))]
@@ -34,9 +34,7 @@ pub async fn create(addr: &str, https: bool) {
 
     #[allow(unused_mut)]
     let mut service =
-        openapi_client::server::context::MakeAddContext::<_, EmptyContext>::new(
-            service
-        );
+        openapi_client::server::context::MakeAddContext::<_, EmptyContext>::new(service);
 
     if https {
         #[cfg(any(target_os = "macos", target_os = "windows", target_os = "ios"))]
@@ -46,12 +44,16 @@ pub async fn create(addr: &str, https: bool) {
 
         #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "ios")))]
         {
-            let mut ssl = SslAcceptor::mozilla_intermediate_v5(SslMethod::tls()).expect("Failed to create SSL Acceptor");
+            let mut ssl = SslAcceptor::mozilla_intermediate_v5(SslMethod::tls())
+                .expect("Failed to create SSL Acceptor");
 
             // Server authentication
-            ssl.set_private_key_file("examples/server-key.pem", SslFiletype::PEM).expect("Failed to set private key");
-            ssl.set_certificate_chain_file("examples/server-chain.pem").expect("Failed to set certificate chain");
-            ssl.check_private_key().expect("Failed to check private key");
+            ssl.set_private_key_file("examples/server-key.pem", SslFiletype::PEM)
+                .expect("Failed to set private key");
+            ssl.set_certificate_chain_file("examples/server-chain.pem")
+                .expect("Failed to set certificate chain");
+            ssl.check_private_key()
+                .expect("Failed to check private key");
 
             let tls_acceptor = ssl.build();
             let tcp_listener = TcpListener::bind(&addr).await.unwrap();
@@ -76,7 +78,10 @@ pub async fn create(addr: &str, https: bool) {
         }
     } else {
         // Using HTTP
-        hyper::server::Server::bind(&addr).serve(service).await.unwrap()
+        hyper::server::Server::bind(&addr)
+            .serve(service)
+            .await
+            .unwrap()
     }
 }
 
@@ -87,21 +92,21 @@ pub struct Server<C> {
 
 impl<C> Server<C> {
     pub fn new() -> Self {
-        Server{marker: PhantomData}
+        Server {
+            marker: PhantomData,
+        }
     }
 }
 
-
-use openapi_client::{
-    Api,
-    GetRatesResponse,
-};
 use openapi_client::server::MakeService;
+use openapi_client::{Api, GetRatesResponse};
 use std::error::Error;
 use swagger::ApiError;
 
 #[async_trait]
-impl<C> Api<C> for Server<C> where C: Has<XSpanIdString> + Send + Sync
+impl<C> Api<C> for Server<C>
+where
+    C: Has<XSpanIdString> + Send + Sync,
 {
     /// 通貨ペアのレートを取得
     async fn get_rates(
@@ -109,11 +114,17 @@ impl<C> Api<C> for Server<C> where C: Has<XSpanIdString> + Send + Sync
         pair: models::Pair,
         period: Option<models::Period>,
         count: Option<i32>,
-        base_datetime: Option<chrono::DateTime::<chrono::Utc>>,
-        context: &C) -> Result<GetRatesResponse, ApiError>
-    {
-        info!("get_rates({:?}, {:?}, {:?}, {:?}) - X-Span-ID: {:?}", pair, period, count, base_datetime, context.get().0.clone());
+        base_datetime: Option<chrono::DateTime<chrono::Utc>>,
+        context: &C,
+    ) -> Result<GetRatesResponse, ApiError> {
+        info!(
+            "get_rates({:?}, {:?}, {:?}, {:?}) - X-Span-ID: {:?}",
+            pair,
+            period,
+            count,
+            base_datetime,
+            context.get().0.clone()
+        );
         Err(ApiError("Generic failure".into()))
     }
-
 }

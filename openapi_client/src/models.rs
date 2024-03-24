@@ -2,9 +2,9 @@
 
 use validator::Validate;
 
-use crate::models;
 #[cfg(any(feature = "client", feature = "server"))]
 use crate::header;
+use crate::models;
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
@@ -12,16 +12,12 @@ pub struct ErrorResponse {
     /// エラーメッセージ
     #[serde(rename = "error")]
     pub error: String,
-
 }
-
 
 impl ErrorResponse {
     #[allow(clippy::new_without_default)]
-    pub fn new(error: String, ) -> ErrorResponse {
-        ErrorResponse {
-            error,
-        }
+    pub fn new(error: String) -> ErrorResponse {
+        ErrorResponse { error }
     }
 }
 
@@ -30,12 +26,8 @@ impl ErrorResponse {
 /// Should be implemented in a serde serializer
 impl std::string::ToString for ErrorResponse {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-
-            Some("error".to_string()),
-            Some(self.error.to_string()),
-
-        ];
+        let params: Vec<Option<String>> =
+            vec![Some("error".to_string()), Some(self.error.to_string())];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
@@ -64,15 +56,25 @@ impl std::str::FromStr for ErrorResponse {
         while key_result.is_some() {
             let val = match string_iter.next() {
                 Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing ErrorResponse".to_string())
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing ErrorResponse".to_string(),
+                    )
+                }
             };
 
             if let Some(key) = key_result {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "error" => intermediate_rep.error.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing ErrorResponse".to_string())
+                    "error" => intermediate_rep.error.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing ErrorResponse".to_string(),
+                        )
+                    }
                 }
             }
 
@@ -82,7 +84,11 @@ impl std::str::FromStr for ErrorResponse {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(ErrorResponse {
-            error: intermediate_rep.error.into_iter().next().ok_or_else(|| "error missing in ErrorResponse".to_string())?,
+            error: intermediate_rep
+                .error
+                .into_iter()
+                .next()
+                .ok_or_else(|| "error missing in ErrorResponse".to_string())?,
         })
     }
 }
@@ -93,13 +99,16 @@ impl std::str::FromStr for ErrorResponse {
 impl std::convert::TryFrom<header::IntoHeaderValue<ErrorResponse>> for hyper::header::HeaderValue {
     type Error = String;
 
-    fn try_from(hdr_value: header::IntoHeaderValue<ErrorResponse>) -> std::result::Result<Self, Self::Error> {
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<ErrorResponse>,
+    ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match hyper::header::HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for ErrorResponse - value: {} is invalid {}",
-                     hdr_value, e))
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for ErrorResponse - value: {} is invalid {}",
+                hdr_value, e
+            )),
         }
     }
 }
@@ -110,21 +119,24 @@ impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderVal
 
     fn try_from(hdr_value: hyper::header::HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <ErrorResponse as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into ErrorResponse - {}",
-                                value, err))
+            std::result::Result::Ok(value) => {
+                match <ErrorResponse as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into ErrorResponse - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
         }
     }
 }
-
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
@@ -134,17 +146,12 @@ pub struct GetRatesResponse {
 
     #[serde(rename = "rates")]
     pub rates: Vec<models::Rate>,
-
 }
-
 
 impl GetRatesResponse {
     #[allow(clippy::new_without_default)]
-    pub fn new(period: models::Period, rates: Vec<models::Rate>, ) -> GetRatesResponse {
-        GetRatesResponse {
-            period,
-            rates,
-        }
+    pub fn new(period: models::Period, rates: Vec<models::Rate>) -> GetRatesResponse {
+        GetRatesResponse { period, rates }
     }
 }
 
@@ -188,16 +195,30 @@ impl std::str::FromStr for GetRatesResponse {
         while key_result.is_some() {
             let val = match string_iter.next() {
                 Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing GetRatesResponse".to_string())
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing GetRatesResponse".to_string(),
+                    )
+                }
             };
 
             if let Some(key) = key_result {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "period" => intermediate_rep.period.push(<models::Period as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    "rates" => return std::result::Result::Err("Parsing a container in this style is not supported in GetRatesResponse".to_string()),
-                    _ => return std::result::Result::Err("Unexpected key while parsing GetRatesResponse".to_string())
+                    "period" => intermediate_rep.period.push(
+                        <models::Period as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    "rates" => return std::result::Result::Err(
+                        "Parsing a container in this style is not supported in GetRatesResponse"
+                            .to_string(),
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing GetRatesResponse".to_string(),
+                        )
+                    }
                 }
             }
 
@@ -207,8 +228,16 @@ impl std::str::FromStr for GetRatesResponse {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(GetRatesResponse {
-            period: intermediate_rep.period.into_iter().next().ok_or_else(|| "period missing in GetRatesResponse".to_string())?,
-            rates: intermediate_rep.rates.into_iter().next().ok_or_else(|| "rates missing in GetRatesResponse".to_string())?,
+            period: intermediate_rep
+                .period
+                .into_iter()
+                .next()
+                .ok_or_else(|| "period missing in GetRatesResponse".to_string())?,
+            rates: intermediate_rep
+                .rates
+                .into_iter()
+                .next()
+                .ok_or_else(|| "rates missing in GetRatesResponse".to_string())?,
         })
     }
 }
@@ -216,41 +245,51 @@ impl std::str::FromStr for GetRatesResponse {
 // Methods for converting between header::IntoHeaderValue<GetRatesResponse> and hyper::header::HeaderValue
 
 #[cfg(any(feature = "client", feature = "server"))]
-impl std::convert::TryFrom<header::IntoHeaderValue<GetRatesResponse>> for hyper::header::HeaderValue {
+impl std::convert::TryFrom<header::IntoHeaderValue<GetRatesResponse>>
+    for hyper::header::HeaderValue
+{
     type Error = String;
 
-    fn try_from(hdr_value: header::IntoHeaderValue<GetRatesResponse>) -> std::result::Result<Self, Self::Error> {
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<GetRatesResponse>,
+    ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match hyper::header::HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for GetRatesResponse - value: {} is invalid {}",
-                     hdr_value, e))
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for GetRatesResponse - value: {} is invalid {}",
+                hdr_value, e
+            )),
         }
     }
 }
 
 #[cfg(any(feature = "client", feature = "server"))]
-impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderValue<GetRatesResponse> {
+impl std::convert::TryFrom<hyper::header::HeaderValue>
+    for header::IntoHeaderValue<GetRatesResponse>
+{
     type Error = String;
 
     fn try_from(hdr_value: hyper::header::HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <GetRatesResponse as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into GetRatesResponse - {}",
-                                value, err))
+            std::result::Result::Ok(value) => {
+                match <GetRatesResponse as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into GetRatesResponse - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
         }
     }
 }
-
 
 /// 通貨ペア
 /// Enumeration of values.
@@ -258,7 +297,9 @@ impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderVal
 /// which helps with FFI.
 #[allow(non_camel_case_types)]
 #[repr(C)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize,
+)]
 #[cfg_attr(feature = "conversion", derive(frunk_enum_derive::LabelledGenericEnum))]
 pub enum Pair {
     #[serde(rename = "btc_jpy")]
@@ -318,7 +359,9 @@ impl std::str::FromStr for Pair {
 /// which helps with FFI.
 #[allow(non_camel_case_types)]
 #[repr(C)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize,
+)]
 #[cfg_attr(feature = "conversion", derive(frunk_enum_derive::LabelledGenericEnum))]
 pub enum Period {
     #[serde(rename = "daily")]
@@ -370,18 +413,24 @@ pub struct Rate {
 
     /// 期間の開始日時
     #[serde(rename = "begin_date")]
-    pub begin_date: chrono::DateTime::<chrono::Utc>,
+    pub begin_date: chrono::DateTime<chrono::Utc>,
 
     /// 期間の終了日時
     #[serde(rename = "end_date")]
-    pub end_date: chrono::DateTime::<chrono::Utc>,
-
+    pub end_date: chrono::DateTime<chrono::Utc>,
 }
-
 
 impl Rate {
     #[allow(clippy::new_without_default)]
-    pub fn new(closing: f64, opening: f64, high: f64, low: f64, volume: f64, begin_date: chrono::DateTime::<chrono::Utc>, end_date: chrono::DateTime::<chrono::Utc>, ) -> Rate {
+    pub fn new(
+        closing: f64,
+        opening: f64,
+        high: f64,
+        low: f64,
+        volume: f64,
+        begin_date: chrono::DateTime<chrono::Utc>,
+        end_date: chrono::DateTime<chrono::Utc>,
+    ) -> Rate {
         Rate {
             closing,
             opening,
@@ -400,30 +449,19 @@ impl Rate {
 impl std::string::ToString for Rate {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-
             Some("closing".to_string()),
             Some(self.closing.to_string()),
-
-
             Some("opening".to_string()),
             Some(self.opening.to_string()),
-
-
             Some("high".to_string()),
             Some(self.high.to_string()),
-
-
             Some("low".to_string()),
             Some(self.low.to_string()),
-
-
             Some("volume".to_string()),
             Some(self.volume.to_string()),
-
             // Skipping begin_date in query parameter serialization
 
             // Skipping end_date in query parameter serialization
-
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -446,8 +484,8 @@ impl std::str::FromStr for Rate {
             pub high: Vec<f64>,
             pub low: Vec<f64>,
             pub volume: Vec<f64>,
-            pub begin_date: Vec<chrono::DateTime::<chrono::Utc>>,
-            pub end_date: Vec<chrono::DateTime::<chrono::Utc>>,
+            pub begin_date: Vec<chrono::DateTime<chrono::Utc>>,
+            pub end_date: Vec<chrono::DateTime<chrono::Utc>>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -459,27 +497,49 @@ impl std::str::FromStr for Rate {
         while key_result.is_some() {
             let val = match string_iter.next() {
                 Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing Rate".to_string())
+                None => {
+                    return std::result::Result::Err("Missing value while parsing Rate".to_string())
+                }
             };
 
             if let Some(key) = key_result {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "closing" => intermediate_rep.closing.push(<f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "closing" => intermediate_rep.closing.push(
+                        <f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "opening" => intermediate_rep.opening.push(<f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "opening" => intermediate_rep.opening.push(
+                        <f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "high" => intermediate_rep.high.push(<f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "high" => intermediate_rep.high.push(
+                        <f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "low" => intermediate_rep.low.push(<f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "low" => intermediate_rep.low.push(
+                        <f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "volume" => intermediate_rep.volume.push(<f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "volume" => intermediate_rep.volume.push(
+                        <f64 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "begin_date" => intermediate_rep.begin_date.push(<chrono::DateTime::<chrono::Utc> as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "begin_date" => intermediate_rep.begin_date.push(
+                        <chrono::DateTime<chrono::Utc> as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
                     #[allow(clippy::redundant_clone)]
-                    "end_date" => intermediate_rep.end_date.push(<chrono::DateTime::<chrono::Utc> as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing Rate".to_string())
+                    "end_date" => intermediate_rep.end_date.push(
+                        <chrono::DateTime<chrono::Utc> as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing Rate".to_string(),
+                        )
+                    }
                 }
             }
 
@@ -489,13 +549,41 @@ impl std::str::FromStr for Rate {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(Rate {
-            closing: intermediate_rep.closing.into_iter().next().ok_or_else(|| "closing missing in Rate".to_string())?,
-            opening: intermediate_rep.opening.into_iter().next().ok_or_else(|| "opening missing in Rate".to_string())?,
-            high: intermediate_rep.high.into_iter().next().ok_or_else(|| "high missing in Rate".to_string())?,
-            low: intermediate_rep.low.into_iter().next().ok_or_else(|| "low missing in Rate".to_string())?,
-            volume: intermediate_rep.volume.into_iter().next().ok_or_else(|| "volume missing in Rate".to_string())?,
-            begin_date: intermediate_rep.begin_date.into_iter().next().ok_or_else(|| "begin_date missing in Rate".to_string())?,
-            end_date: intermediate_rep.end_date.into_iter().next().ok_or_else(|| "end_date missing in Rate".to_string())?,
+            closing: intermediate_rep
+                .closing
+                .into_iter()
+                .next()
+                .ok_or_else(|| "closing missing in Rate".to_string())?,
+            opening: intermediate_rep
+                .opening
+                .into_iter()
+                .next()
+                .ok_or_else(|| "opening missing in Rate".to_string())?,
+            high: intermediate_rep
+                .high
+                .into_iter()
+                .next()
+                .ok_or_else(|| "high missing in Rate".to_string())?,
+            low: intermediate_rep
+                .low
+                .into_iter()
+                .next()
+                .ok_or_else(|| "low missing in Rate".to_string())?,
+            volume: intermediate_rep
+                .volume
+                .into_iter()
+                .next()
+                .ok_or_else(|| "volume missing in Rate".to_string())?,
+            begin_date: intermediate_rep
+                .begin_date
+                .into_iter()
+                .next()
+                .ok_or_else(|| "begin_date missing in Rate".to_string())?,
+            end_date: intermediate_rep
+                .end_date
+                .into_iter()
+                .next()
+                .ok_or_else(|| "end_date missing in Rate".to_string())?,
         })
     }
 }
@@ -506,13 +594,16 @@ impl std::str::FromStr for Rate {
 impl std::convert::TryFrom<header::IntoHeaderValue<Rate>> for hyper::header::HeaderValue {
     type Error = String;
 
-    fn try_from(hdr_value: header::IntoHeaderValue<Rate>) -> std::result::Result<Self, Self::Error> {
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<Rate>,
+    ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match hyper::header::HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for Rate - value: {} is invalid {}",
-                     hdr_value, e))
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for Rate - value: {} is invalid {}",
+                hdr_value, e
+            )),
         }
     }
 }
@@ -523,18 +614,19 @@ impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderVal
 
     fn try_from(hdr_value: hyper::header::HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <Rate as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into Rate - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
+            std::result::Result::Ok(value) => match <Rate as std::str::FromStr>::from_str(value) {
+                std::result::Result::Ok(value) => {
+                    std::result::Result::Ok(header::IntoHeaderValue(value))
+                }
+                std::result::Result::Err(err) => std::result::Result::Err(format!(
+                    "Unable to convert header value '{}' into Rate - {}",
+                    value, err
+                )),
+            },
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
         }
     }
 }
-
