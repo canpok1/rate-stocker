@@ -1,7 +1,7 @@
 FROM rust:latest as builder
 WORKDIR /usr/src/myapp
 COPY . .
-RUN cargo install --path ./api_server --bin server
+RUN cargo install --path ./api_server
 
 
 FROM rust:1.76-slim
@@ -15,6 +15,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/cargo/bin/server /usr/local/bin/server
+COPY --from=builder /usr/local/cargo/bin/api_server /usr/local/bin/api_server
 
-ENTRYPOINT ["server"]
+ENTRYPOINT ["api_server"]
