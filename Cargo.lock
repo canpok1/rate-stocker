@@ -639,15 +639,15 @@ dependencies = [
 
 [[package]]
 name = "frunk-enum-derive"
-version = "0.2.1"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca2fe96f31066b7735d1cf74b483d213396e3a6d78d83d052608da7339f1b799"
+checksum = "c2c6130959f36116111ab30576a7e8961df52f864524c92d580b1162cb3d2b04"
 dependencies = [
- "frunk_proc_macro_helpers 0.0.4",
+ "frunk_proc_macro_helpers 0.1.2",
  "itertools",
- "proc-macro2 0.4.30",
- "quote 0.6.13",
- "syn 0.15.44",
+ "proc-macro2 1.0.78",
+ "quote 1.0.35",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -682,18 +682,6 @@ dependencies = [
  "frunk_proc_macro_helpers 0.1.2",
  "quote 1.0.35",
  "syn 2.0.52",
-]
-
-[[package]]
-name = "frunk_proc_macro_helpers"
-version = "0.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e24546dac1974be0df3e61144eff911672404bad46a76f39f6c72829f6254dbe"
-dependencies = [
- "frunk_core 0.3.2",
- "proc-macro2 0.4.30",
- "quote 0.6.13",
- "syn 0.15.44",
 ]
 
 [[package]]
@@ -1147,9 +1135,9 @@ checksum = "8f518f335dce6725a761382244631d86cf0ccb2863413590b31338feb467f9c3"
 
 [[package]]
 name = "itertools"
-version = "0.10.5"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
+checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
 dependencies = [
  "either",
 ]
