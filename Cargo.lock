@@ -1945,9 +1945,9 @@ checksum = "5ee073c9e4cd00e28217186dbe12796d692868f432bf2e97ee73bed0c56dfa01"
 
 [[package]]
 name = "swagger"
-version = "6.4.1"
+version = "6.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f5c24057cf0e1c1a88fb2a12d19fe6e7ea6a24b74775352224a9718a8e9eb43"
+checksum = "3838ea05c85b686e53319d25a5fc3ce4e4e2a92991e83798f0f062fd1f77bb5e"
 dependencies = [
  "base64 0.13.1",
  "futures",

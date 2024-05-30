@@ -7,7 +7,7 @@ edition = "2021"
 openapi_client = { path = "../openapi_client", features = ["server"] }
 async-trait = "0.1.80"
 chrono = { workspace = true }
-swagger = { version = "6.1", features = ["serdejson", "server", "client", "tls", "tcp"] }
+swagger = { version = "6.5", features = ["serdejson", "server", "client", "tls", "tcp"] }
 log = "0.4.0"
 hyper = {version = "0.14", features = ["full"]}
 serde_ignored = {version = "0.1.1"}
