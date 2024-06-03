@@ -433,9 +433,9 @@ dependencies = [
 
 [[package]]
 name = "diesel"
-version = "2.1.6"
+version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff236accb9a5069572099f0b350a92e9560e8e63a9b8d546162f4a5e03026bb2"
+checksum = "35b696af9ff4c0d2a507db2c5faafa8aa0205e297e5f11e203a24226d5355e7a"
 dependencies = [
  "bigdecimal",
  "bitflags 2.4.2",
@@ -452,11 +452,12 @@ dependencies = [
 
 [[package]]
 name = "diesel_derives"
-version = "2.1.2"
+version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef8337737574f55a468005a83499da720f20c65586241ffea339db9ecdfd2b44"
+checksum = "0d6fdd83d5947068817016e939596d246e5367279453f2a3433287894f2f2996"
 dependencies = [
  "diesel_table_macro_syntax",
+ "dsl_auto_type",
  "proc-macro2",
  "quote",
  "syn 2.0.52",
@@ -464,9 +465,9 @@ dependencies = [
 
 [[package]]
 name = "diesel_table_macro_syntax"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc5557efc453706fed5e4fa85006fe9817c224c3f480a34c7e5959fd700921c5"
+checksum = "209c735641a413bc68c4923a9d6ad4bcb3ca306b794edaa7eb0b3228a99ffb25"
 dependencies = [
  "syn 2.0.52",
 ]
@@ -488,6 +489,20 @@ name = "downcast"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4bb454f0228b18c7f4c3b0ebbee346ed9c52e7443b0999cd543ff3571205701d"
+
+[[package]]
+name = "dsl_auto_type"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab32c18ea6760d951659768a3e35ea72fc1ba0916d665a88dfe048b2a41e543f"
+dependencies = [
+ "darling",
+ "either",
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.52",
+]
 
 [[package]]
 name = "either"
