@@ -4,7 +4,7 @@ COPY . .
 RUN cargo install --path ./fetcher --bin fetcher
 
 
-FROM rust:1.76-slim
+FROM rust:1.79-slim
 
 ENV DATABASE_URL mysql://${USER}:${PASSWORD}@db:${MYSQL_PORT}/${MYSQL_DATABASE}
 ENV TZ=Asia/Tokyo

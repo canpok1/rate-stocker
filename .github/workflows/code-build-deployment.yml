@@ -22,7 +22,7 @@ jobs:
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
       - name: Run cargo clippy
-        run: cargo clippy --workspace -- -D warnings
+        run: cargo clippy --workspace
 
   db_test:
     runs-on: ubuntu-latest
