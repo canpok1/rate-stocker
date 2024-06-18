@@ -526,7 +526,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a009aa4810eb158359dda09d0c87378e4bbb89b5a801f016885a4707ba24f7ea"
 dependencies = [
  "log",
- "regex 1.10.4",
+ "regex 1.10.5",
 ]
 
 [[package]]
@@ -1384,7 +1384,7 @@ dependencies = [
  "native-tls",
  "openssl",
  "percent-encoding 2.3.1",
- "regex 1.10.4",
+ "regex 1.10.5",
  "serde",
  "serde_ignored",
  "serde_json",
@@ -1487,7 +1487,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c705f256449c60da65e11ff6626e0c16a0a0b96aaa348de61376b249bc340f41"
 dependencies = [
- "regex 1.10.4",
+ "regex 1.10.5",
 ]
 
 [[package]]
@@ -1588,7 +1588,7 @@ dependencies = [
  "float-cmp",
  "normalize-line-endings",
  "predicates-core",
- "regex 1.10.4",
+ "regex 1.10.5",
 ]
 
 [[package]]
@@ -1688,9 +1688,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.10.4"
+version = "1.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c117dbdfde9c8308975b6a18d71f3f385c89461f7b3fb054288ecf2a2058ba4c"
+checksum = "b91213439dad192326a0d7c6ee3955910425f441d7038e0d6933b0aec5c4517f"
 dependencies = [
  "aho-corasick 1.1.2",
  "memchr",
@@ -2312,7 +2312,7 @@ checksum = "db79c75af171630a3148bd3e6d7c4f42b6a9a014c2945bc5ed0020cbb8d9478e"
 dependencies = [
  "idna",
  "once_cell",
- "regex 1.10.4",
+ "regex 1.10.5",
  "serde",
  "serde_derive",
  "serde_json",
