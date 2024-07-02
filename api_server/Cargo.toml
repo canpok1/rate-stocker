@@ -9,7 +9,7 @@ async-trait = "0.1.80"
 chrono = { workspace = true }
 swagger = { version = "6.5", features = ["serdejson", "server", "client", "tls", "tcp"] }
 log = "0.4.22"
-hyper = {version = "0.14", features = ["full"]}
+hyper = {version = "1.2", features = ["full"]}
 serde_ignored = {version = "0.1.1"}
 env_logger = "0.11"
 tokio = { workspace = true }
