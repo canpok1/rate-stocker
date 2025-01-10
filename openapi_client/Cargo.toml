@@ -41,7 +41,7 @@ validator = { version = "0.19", features = ["derive"] }
 # Crates included if required by the API definition
 
 # Common between server and client features
-hyper = {version = "0.14", features = ["full"], optional = true}
+hyper = {version = "1.2", features = ["full"], optional = true}
 serde_ignored = {version = "0.1.1", optional = true}
 url = {version = "2.5", optional = true}
 
