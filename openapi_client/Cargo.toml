@@ -31,7 +31,7 @@ async-trait = "0.1.85"
 chrono = { version = "0.4", features = ["serde"] }
 futures = "0.3"
 swagger = { version = "6.5", features = ["serdejson", "server", "client", "tls", "tcp"] }
-log = "0.4.22"
+log = "0.4.25"
 mime = "0.3"
 
 serde = { version = "1.0", features = ["derive"] }
